@@ -8,6 +8,18 @@ export const routes: Routes = [
             {
                 path: '',
                 loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard)
+            },
+            {
+                path: 'sparks',
+                loadComponent: () => import('./features/sparks-dashboard/sparks-dashboard').then(m => m.SparksDashboard)
+            },
+            {
+                path: 'subscriptions',
+                loadComponent: () => import('./features/subscriptions/subscriptions').then(m => m.Subscriptions)
+            },
+            {
+                path: 'watch/:id',
+                loadComponent: () => import('./features/watch/watch').then(m => m.WatchComponent)
             }
         ]
     }

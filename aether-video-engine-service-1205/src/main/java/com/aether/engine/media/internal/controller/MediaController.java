@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 import com.aether.engine.media.internal.repository.MediaJobRepository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,16 +55,8 @@ public class MediaController {
                 uploadDto.getLanguage(), UUID.fromString(userIdHeader), metadata);
         MediaJob job = mediaService.processUpload(uploadDto.getFile(), request);
 
-        MediaJobDto jobDto = MediaJobDto.builder()
-                .id(job.getId())
-                .title(job.getTitle())
-                .status(job.getStatus())
-                .appSource(job.getAppSource())
-                .metadata(job.getMetadata())
-                .createdAt(job.getCreatedAt())
-                .build();
+        return ApiResponse.success(mapToDto(job), "Video upload started successfully");
 
-        return ApiResponse.success(jobDto, "Video upload started successfully");
     }
 
     @GetMapping("/{id}")
@@ -72,16 +64,33 @@ public class MediaController {
         MediaJob job = mediaJobRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
-        MediaJobDto jobDto = MediaJobDto.builder()
+        return ApiResponse.success(mapToDto(job), "Job status retrieved");
+    }
+
+    @GetMapping("/feed")
+    public ApiResponse<java.util.List<MediaJobDto>> getFeed(
+            @org.springframework.web.bind.annotation.RequestParam String appSource) {
+        java.util.List<MediaJob> jobs = mediaService.getFeed(appSource);
+        java.util.List<MediaJobDto> dtos = jobs.stream().map(this::mapToDto).toList();
+        return ApiResponse.success(dtos, "Feed retrieved successfully");
+    }
+
+    private MediaJobDto mapToDto(MediaJob job) {
+        return MediaJobDto.builder()
                 .id(job.getId())
                 .title(job.getTitle())
                 .status(job.getStatus())
                 .progress(job.getProgress())
                 .appSource(job.getAppSource())
+                .videoType(job.getVideoType())
+                .visibility(job.getVisibility())
+                .thumbnailUrl(job.getThumbnailUrl())
+                .uploaderId(job.getUploaderId())
+                .description(job.getDescription())
+                .durationSeconds(job.getDurationSeconds())
+                .language(job.getLanguage())
                 .metadata(job.getMetadata())
                 .createdAt(job.getCreatedAt())
                 .build();
-
-        return ApiResponse.success(jobDto, "Job status retrieved");
     }
 }

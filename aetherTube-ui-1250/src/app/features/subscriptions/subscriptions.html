@@ -1,0 +1,46 @@
+<div class="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Page Header -->
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-text-main dark:text-text-dark-main">Latest</h1>
+        <div class="flex gap-2">
+            <button
+                class="px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                Manage
+            </button>
+            <div class="flex items-center bg-surface-hover dark:bg-surface-dark-hover rounded-lg p-1">
+                <button class="p-1.5 rounded-md hover:bg-white dark:hover:bg-neutral-700 shadow-sm transition-all"
+                    title="Grid View">
+                    <svg class="w-5 h-5 text-text-main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </button>
+                <button class="p-1.5 rounded-md text-text-muted hover:text-text-main transition-colors"
+                    title="List View">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-10 gap-x-6">
+        @for (video of videos; track video.id) {
+        <app-video-card [video]="video"></app-video-card>
+        }
+    </div>
+
+</div>

@@ -1,0 +1,102 @@
+<div
+    class="relative w-full h-[calc(100vh-4rem)] max-w-sm mx-auto sm:max-w-md bg-black sm:rounded-2xl overflow-hidden shadow-2xl group border border-gray-800">
+
+    <!-- Video Background (Mock Image) -->
+    <img [src]="spark.thumbnail" alt="Spark video"
+        class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/90 pointer-events-none"></div>
+
+    <!-- Right Sidebar Actions -->
+    <div class="absolute bottom-6 right-2 flex flex-col items-center gap-4 z-20">
+
+        <!-- Like -->
+        <button (click)="toggleLike()" class="flex flex-col items-center gap-1 group/btn">
+            <div class="p-3 rounded-full bg-black/40 backdrop-blur-sm transition-all active:scale-95 hover:bg-black/60"
+                [class.text-red-500]="isLiked()" [class.text-white]="!isLiked()">
+                <svg class="w-7 h-7" [class.fill-current]="isLiked()" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+                </svg>
+            </div>
+            <span class="text-white text-xs font-semibold drop-shadow-md">{{ spark.likes }}</span>
+        </button>
+
+        <!-- Comment -->
+        <button class="flex flex-col items-center gap-1 group/btn">
+            <div
+                class="p-3 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all active:scale-95 hover:bg-black/60">
+                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                    </path>
+                </svg>
+            </div>
+            <span class="text-white text-xs font-semibold drop-shadow-md">{{ spark.comments }}</span>
+        </button>
+
+        <!-- Share -->
+        <button class="flex flex-col items-center gap-1 group/btn">
+            <div
+                class="p-3 rounded-full bg-black/40 backdrop-blur-sm text-white transition-all active:scale-95 hover:bg-black/60">
+                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16 6 12 2 8 6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                </svg>
+            </div>
+            <span class="text-white text-xs font-semibold drop-shadow-md">Share</span>
+        </button>
+    </div>
+
+    <!-- Bottom Info Section -->
+    <div class="absolute bottom-0 left-0 right-14 p-4 z-20 space-y-3">
+
+        <!-- Channel Info -->
+        <div class="flex items-center gap-2">
+            <img [src]="spark.avatar" class="w-10 h-10 rounded-full border border-white/20 object-cover" alt="Avatar">
+            <div class="flex flex-col">
+                <span class="text-white font-bold text-sm drop-shadow-md hover:underline cursor-pointer">@{{
+                    spark.channelName }}</span>
+            </div>
+            <button (click)="toggleSubscribe()" class="ml-2 px-3 py-1 rounded-full text-xs font-bold transition-colors"
+                [class.bg-white]="!isSubscribed()" [class.text-black]="!isSubscribed()"
+                [class.bg-white/20]="isSubscribed()" [class.text-white]="isSubscribed()">
+                {{ isSubscribed() ? 'Subscribed' : 'Subscribe' }}
+            </button>
+        </div>
+
+        <!-- Title & Description -->
+        <div>
+            <p class="text-white text-sm line-clamp-2 drop-shadow-md leading-snug">
+                {{ spark.title }} <span class="text-blue-400 font-semibold cursor-pointer">#sparks</span> <span
+                    class="text-blue-400 font-semibold cursor-pointer">#viral</span>
+            </p>
+        </div>
+
+        <!-- Audio Track -->
+        <div class="flex items-center gap-2 text-white/90 text-xs font-medium">
+            <svg class="w-3 h-3 animate-spin-slow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+            <div class="overflow-hidden w-32">
+                <span class="whitespace-nowrap animate-marquee">Original Sound - {{ spark.channelName }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar (Mock) -->
+    <div class="absolute bottom-0 left-0 w-full h-1 bg-white/20">
+        <div class="h-full bg-red-600 w-1/3"></div>
+    </div>
+
+</div>

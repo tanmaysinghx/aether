@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +12,12 @@ export class Header implements OnInit {
   isDarkMode = signal(false);
   isSearchFocused = signal(false);
   searchQuery = signal('');
+
+  constructor(public ui: UiService) {}
+
+  toggleSidebar() {
+    this.ui.toggleSidebar();
+  }
 
   ngOnInit() {
     // Check for saved theme preference or default to light mode

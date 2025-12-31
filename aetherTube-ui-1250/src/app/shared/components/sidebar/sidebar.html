@@ -1,25 +1,30 @@
-<div
-    class="hs-overlay hs-overlay-open:translate-x-0 hidden -translate-x-full fixed top-0 start-0 transition-all duration-300 transform h-full max-w-xs w-64 z-[60] bg-white border-e border-gray-200 dark:bg-neutral-800 dark:border-neutral-700 lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 lg:pt-20">
-    <nav class="hs-accordion-group p-6 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
-      <!-- Sidebar Top: Logo -->
-      <div class="mb-6 flex items-center">
-        <a class="flex items-center gap-3 group" href="#" aria-label="Ae tube">
-          <div class="relative">
-            <div class="absolute -inset-1 bg-gradient-to-r from-red-600 to-purple-600 rounded-lg blur opacity-25"></div>
-            <div class="relative flex items-center justify-center w-10 h-10 bg-gradient-to-br from-red-500 to-purple-600 rounded-lg shadow-lg">
-              <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ae logo">
-                <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-weight="700" font-size="10" fill="white">Ae</text>
-              </svg>
-            </div>
-          </div>
-          <span class="text-lg font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent lowercase">tube</span>
-        </a>
-      </div>
+<div id="sidebar-panel" [class.translate-x-0]="ui.sidebarOpen()" [class.-translate-x-full]="!ui.sidebarOpen()"
+    class="hs-overlay -translate-x-full fixed top-0 start-0 transition-transform duration-300 transform h-full max-w-xs w-64 z-[60] bg-surface border-e border-border dark:bg-surface-dark dark:border-border-dark lg:block lg:translate-x-0 lg:end-auto lg:bottom-0">
+    <nav class="hs-accordion-group p-4 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
+        <!-- Sidebar Top: Logo -->
+        <div class="mb-6 flex items-center px-2">
+            <a class="flex items-center gap-2.5 group" href="#" aria-label="Ae tube">
+                <div
+                    class="flex items-center justify-center w-8 h-8 bg-primary dark:bg-primary-dark rounded-lg transition-transform group-hover:scale-105">
+                    <span class="text-primary-foreground font-bold text-sm">Ae</span>
+                </div>
+                <span class="text-lg font-semibold text-text-main dark:text-text-dark-main">tube</span>
+            </a>
+            <!-- Mobile Close Button -->
+            <button (click)="ui.closeSidebar()" aria-label="Close sidebar"
+                class="lg:hidden ml-auto p-2 rounded-md text-text-muted hover:bg-surface-hover dark:hover:bg-surface-dark-hover">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
         <ul class="space-y-1.5">
             <!-- Home -->
             <li>
-                <a class="flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-gray-700 rounded-lg hover:bg-gray-100 dark:bg-neutral-700 dark:text-white"
-                    href="#">
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-text-main rounded-lg hover:bg-surface-hover hover:text-primary transition-colors"
+                    routerLink="/" routerLinkActive="bg-surface-hover font-medium text-primary"
+                    [routerLinkActiveOptions]="{exact: true}">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -30,23 +35,23 @@
                 </a>
             </li>
 
-            <!-- Trending -->
+            <!-- Sparks (Shorts) -->
             <li>
-                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
-                    href="#">
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-text-main rounded-lg hover:bg-surface-hover hover:text-primary transition-colors"
+                    routerLink="/sparks" routerLinkActive="bg-surface-hover font-medium text-primary">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
-                        <path d="M12 20v-6M6 20V10M18 20V4" />
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                     </svg>
-                    Trending
+                    Sparks
                 </a>
             </li>
 
             <!-- Subscriptions -->
             <li>
-                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
-                    href="#">
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-text-main rounded-lg hover:bg-surface-hover hover:text-primary transition-colors"
+                    routerLink="/subscriptions" routerLinkActive="bg-surface-hover font-medium text-primary">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -56,33 +61,99 @@
                 </a>
             </li>
 
-            <li class="my-4 border-t border-gray-200 dark:border-neutral-700"></li>
+            <li class="my-4 border-t border-border dark:border-border-dark"></li>
 
-            <!-- Library Section -->
-            <li>
-                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
-                    href="#">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                    </svg>
-                    Library
-                </a>
+            <!-- Library Header -->
+            <li class="px-2.5 mb-2">
+                <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">You</span>
             </li>
+
+            <!-- History -->
             <li>
-                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
-                    href="#">
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-text-main rounded-lg hover:bg-surface-hover hover:text-primary transition-colors"
+                    routerLink="/history" routerLinkActive="bg-surface-hover font-medium text-primary">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                        <path d="M3 3v5h5" />
+                        <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
                     </svg>
                     History
                 </a>
             </li>
 
+            <!-- Your Videos -->
+            <li>
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-text-main rounded-lg hover:bg-surface-hover hover:text-primary transition-colors"
+                    routerLink="/my-videos" routerLinkActive="bg-surface-hover font-medium text-primary">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="m15 12-6-4v8l6-4Z" />
+                        <rect width="20" height="14" x="2" y="5" rx="2" ry="2" />
+                    </svg>
+                    Your Videos
+                </a>
+            </li>
+
+            <!-- Playlists -->
+            <li>
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-text-main rounded-lg hover:bg-surface-hover hover:text-primary transition-colors"
+                    routerLink="/playlists" routerLinkActive="bg-surface-hover font-medium text-primary">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 18V5l12-2v13" />
+                        <circle cx="6" cy="18" r="3" />
+                        <circle cx="18" cy="16" r="3" />
+                    </svg>
+                    Playlists
+                </a>
+            </li>
+
+            <!-- Liked Videos -->
+            <li>
+                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-text-main rounded-lg hover:bg-surface-hover hover:text-primary transition-colors"
+                    routerLink="/liked" routerLinkActive="bg-surface-hover font-medium text-primary">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+                    </svg>
+                    Liked Videos
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="my-4 border-t border-border dark:border-border-dark w-full"></div>
+
+        <!-- Subscribed Channels Header -->
+        <h3 class="px-2.5 mb-2 text-xs font-semibold text-text-muted uppercase tracking-wider">Subscriptions</h3>
+
+        <ul class="space-y-1.5 w-full">
+            @for (channel of subscribedChannels; track channel.id) {
+            <li class="group">
+                <a [routerLink]="channel.link"
+                    class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-text-main rounded-lg hover:bg-surface-hover hover:text-primary transition-colors relative">
+                    <img [src]="channel.avatar" [alt]="channel.name" class="w-6 h-6 rounded-full object-cover">
+                    <span class="truncate flex-1">{{ channel.name }}</span>
+
+                    <!-- Unsubscribe Button (Visible on Hover) -->
+                    <button (click)="unsubscribe(channel.id, $event)"
+                        class="absolute right-2 opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 hover:text-red-500 rounded-full transition-all"
+                        title="Unsubscribe">
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </a>
+            </li>
+            }
         </ul>
     </nav>
 </div>

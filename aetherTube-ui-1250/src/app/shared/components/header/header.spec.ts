@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Header } from './header';
+import { UiService } from '../../services/ui.service';
 
 describe('Header', () => {
     let component: Header;
@@ -40,8 +41,23 @@ describe('Header', () => {
 
     it('should have mobile sidebar toggle button', () => {
         const compiled = fixture.nativeElement as HTMLElement;
-        const toggleButton = compiled.querySelector('button[type="button"]');
+        const toggleButton = compiled.querySelector('button[aria-label="Toggle sidebar"]');
         expect(toggleButton).toBeTruthy();
+    });
+
+    it('should toggle the sidebar when mobile toggle clicked', () => {
+        const compiled = fixture.nativeElement as HTMLElement;
+        const toggleButton = compiled.querySelector('button[aria-label="Toggle sidebar"]') as HTMLButtonElement;
+        const ui = TestBed.inject(UiService);
+
+        expect(ui.sidebarOpen()).toBeFalse();
+        toggleButton.click();
+        fixture.detectChanges();
+        expect(ui.sidebarOpen()).toBeTrue();
+
+        toggleButton.click();
+        fixture.detectChanges();
+        expect(ui.sidebarOpen()).toBeFalse();
     });
 
     it('should have notification button', () => {

@@ -1,1 +1,68 @@
-<p>dashboard works!</p>
+<!-- Categories Bar -->
+<div
+    class="sticky top-14 z-40 w-full bg-surface/95 dark:bg-surface-dark/95 backdrop-blur-md border-b border-border dark:border-border-dark py-3 px-6 flex gap-3 overflow-x-auto no-scrollbar mb-6">
+    @for (cat of categories; track cat) {
+    <button (click)="selectCategory(cat)"
+        class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all duration-200"
+        [class.bg-text-main]="selectedCategory === cat" [class.text-surface]="selectedCategory === cat"
+        [class.shadow-md]="selectedCategory === cat" [class.scale-105]="selectedCategory === cat"
+        [class.dark:bg-text-dark-main]="selectedCategory === cat"
+        [class.dark:text-surface-dark]="selectedCategory === cat" [class.bg-gray-100]="selectedCategory !== cat"
+        [class.text-text-main]="selectedCategory !== cat" [class.hover:bg-gray-200]="selectedCategory !== cat"
+        [class.dark:bg-surface-dark-hover]="selectedCategory !== cat"
+        [class.dark:text-text-dark-main]="selectedCategory !== cat"
+        [class.dark:hover:bg-neutral-700]="selectedCategory !== cat">
+        {{ cat }}
+    </button>
+    }
+</div>
+
+<!-- Main Content Container with restored padding -->
+<div class="px-4 sm:px-6 lg:px-8 pb-12 space-y-10">
+
+    <!-- Video Grid Part 1 -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-10 gap-x-6">
+        @if (isLoading()) {
+        @for (i of [1,2,3,4,5,6,7,8]; track i) {
+        <app-video-card-skeleton></app-video-card-skeleton>
+        }
+        } @else {
+        @for (video of videos().slice(0, 8); track video.id) {
+        <app-video-card [video]="video"></app-video-card>
+        }
+        }
+    </div>
+
+    <!-- Sparks Section -->
+    <div
+        class="py-6 border-t border-b border-border/50 dark:border-border-dark/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50/50 to-transparent dark:from-blue-900/10 dark:to-transparent">
+        <div class="flex items-center gap-3 mb-5">
+            <div class="p-1.5 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-text-main dark:text-text-dark-main tracking-tight">Sparks</h2>
+        </div>
+
+        <!-- Horizontal Scroll Container -->
+        <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x snap-mandatory">
+            @for (spark of sparks; track spark.id) {
+            <div class="flex-shrink-0 w-44 sm:w-52 snap-start">
+                <app-spark-card [spark]="spark"></app-spark-card>
+            </div>
+            }
+        </div>
+    </div>
+
+    <!-- Video Grid Part 2 -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-10 gap-x-6">
+        @if (!isLoading()) {
+        @for (video of videos().slice(8); track video.id) {
+        <app-video-card [video]="video"></app-video-card>
+        }
+        }
+    </div>
+
+</div>

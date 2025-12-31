@@ -104,6 +104,10 @@ public class MediaService {
         return savedJob;
     }
 
+    public java.util.List<MediaJob> getFeed(String appSource) {
+        return mediaJobRepository.findByAppSourceAndStatusOrderByCreatedAtDesc(appSource, "COMPLETED");
+    }
+
     private boolean shouldUpdate(Double current, Double newProgress) {
         if (current == null)
             return true;

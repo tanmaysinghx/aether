@@ -1,0 +1,9 @@
+<div class="h-[calc(100vh-3.5rem)] w-full overflow-y-scroll snap-y snap-mandatory bg-black/95">
+    <div class="flex flex-col items-center gap-4 py-4">
+        @for (spark of sparks; track spark.id) {
+        <div class="snap-start snap-always w-full h-[calc(100vh-4rem)] flex items-center justify-center py-2">
+            <app-spark-player [spark]="spark"></app-spark-player>
+        </div>
+        }
+    </div>
+</div>

@@ -33,11 +33,13 @@ public class VideoProgressController {
         try {
             UUID userId = UUID.fromString(userIdHeader);
             String videoIdStr = (String) payload.get("videoId");
-            Double progress = ((Number) payload.get("progress")).doubleValue();
+            Object progressObj = payload.get("progressSeconds");
 
-            if (videoIdStr == null || progress == null) {
-                return ApiResponse.error("ERR-400", "Invalid payload", null);
+            if (videoIdStr == null || progressObj == null) {
+                return ApiResponse.error("ERR-400", "Invalid payload: videoId and progressSeconds are required", null);
             }
+
+            Double progress = ((Number) progressObj).doubleValue();
 
             UUID videoId = UUID.fromString(videoIdStr);
 
