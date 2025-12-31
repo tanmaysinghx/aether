@@ -50,7 +50,7 @@ The build artifacts will be stored in the `dist/` directory.
 
 *   **Tailwind Config**: `tailwind.config.js`
 *   **Preline Integration**: Scripts are loaded via `angular.json` scripts array.
-*   **Global Styles**: `src/styles.css`
+*   **Global Styles**: `src/styles.scss`
 
 ## 🤝 Contributing
 
