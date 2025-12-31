@@ -1,0 +1,66 @@
+// Header Component Styles
+// Custom styles for the header component can be added here
+// Most styling is handled by Tailwind CSS classes in the template
+
+// Custom animations for notification bell
+@keyframes bell-ring {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    10%,
+    30% {
+        transform: rotate(-10deg);
+    }
+
+    20%,
+    40% {
+        transform: rotate(10deg);
+    }
+}
+
+.notification-bell:hover svg {
+    animation: bell-ring 0.5s ease-in-out;
+}
+
+// Search input focus enhancement
+#search {
+    transition: all 0.2s ease-in-out;
+
+    &:focus {
+        transform: scale(1.02);
+    }
+}
+
+// Avatar hover effect
+.avatar-button {
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    img {
+        transition: ring 0.2s ease-in-out;
+    }
+}
+
+// Mobile menu button interaction
+.mobile-toggle {
+    transition: all 0.2s ease-in-out;
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+// Header shadow on scroll (can be applied via JS)
+.header-scrolled {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    @media (prefers-color-scheme: dark) {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+}
