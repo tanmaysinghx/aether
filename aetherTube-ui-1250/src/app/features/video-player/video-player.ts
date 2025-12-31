@@ -96,9 +96,17 @@ export class VideoPlayer implements OnInit, OnDestroy, OnChanges {
                     this.qualityLevels.set(levels);
                     this.isLoading.set(false);
 
-                    // Explicitly set currentTime just in case
+                    // Robust Seeking:
                     if (startSeconds > 0) {
                         video.currentTime = startSeconds;
+                        // Also enforce it when metadata loads to be safe
+                        const onMetadata = () => {
+                            if (Math.abs(video.currentTime - startSeconds) > 1) {
+                                video.currentTime = startSeconds;
+                            }
+                            video.removeEventListener('loadedmetadata', onMetadata);
+                        };
+                        video.addEventListener('loadedmetadata', onMetadata);
                     }
 
                     video.play().catch(() => { });
