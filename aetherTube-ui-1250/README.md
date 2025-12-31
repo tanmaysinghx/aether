@@ -1,6 +1,6 @@
-# AetherTube UI
+# tube UI
 
-**AetherTube UI** is the modern frontend client for the Aether Video Engine. Built with **Angular 21**, it features a sleek interface styled with **Tailwind CSS** and **Preline UI components**.
+**tube UI** is the modern frontend client for the Aether Video Engine. Built with **Angular 21**, it features a sleek interface styled with **Tailwind CSS** and **Preline UI components**.
 
 ## 🛠️ Technology Stack
 

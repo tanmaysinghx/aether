@@ -1,0 +1,147 @@
+<!-- Modern Premium Header with Glassmorphism -->
+<header
+  class="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 shadow-sm">
+  <nav class="mx-auto flex w-full items-center justify-between px-4 sm:px-6 lg:px-8 h-16" aria-label="Global">
+
+    <!-- Left Section: Mobile Menu + Logo -->
+    <div class="flex items-center gap-4">
+      <!-- Mobile Sidebar Toggle -->
+      <button type="button"
+        class="lg:hidden inline-flex items-center justify-center p-2 rounded-xl border border-gray-300/50 dark:border-gray-600/50 bg-white/50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105 active:scale-95">
+        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" x2="21" y1="6" y2="6" />
+          <line x1="3" x2="21" y1="12" y2="12" />
+          <line x1="3" x2="21" y1="18" y2="18" />
+        </svg>
+      </button>
+
+      <!-- Logo with Gradient -->
+      <a class="flex items-center gap-2 group" href="#" aria-label="Ae tube">
+        <div class="relative">
+          <div
+            class="absolute -inset-1 bg-gradient-to-r from-red-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-300">
+          </div>
+          <div
+            class="relative flex items-center justify-center w-9 h-9 bg-gradient-to-br from-red-500 to-purple-600 rounded-lg shadow-lg">
+            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ae logo">
+              <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-weight="700" font-size="10" fill="white">Ae</text>
+            </svg>
+          </div>
+        </div>
+        <span
+          class="hidden sm:block text-xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent lowercase">
+          tube
+        </span>
+      </a>
+    </div>
+
+    <!-- Center Section: Search Bar -->
+    <div class="hidden md:flex flex-1 max-w-2xl mx-8">
+      <div class="relative w-full group">
+        <div
+          class="absolute -inset-0.5 bg-gradient-to-r from-red-500 to-purple-600 rounded-full blur opacity-0 group-hover:opacity-20 transition duration-300"
+          [class.opacity-30]="isSearchFocused()"></div>
+        <div class="relative flex items-center">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <svg class="h-5 w-5 transition-colors duration-200" [class.text-red-500]="isSearchFocused()"
+              [class.text-gray-400]="!isSearchFocused()" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+          </div>
+          <input type="text" [value]="searchQuery()" (input)="onSearchInput($event)" (focus)="onSearchFocus()"
+            (blur)="onSearchBlur()"
+            class="w-full pl-12 pr-12 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-300/50 dark:border-gray-600/50 rounded-full text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all duration-200"
+            placeholder="Search videos, channels, and more...">
+          @if (searchQuery()) {
+          <button (click)="clearSearch()"
+            class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Section: Actions -->
+    <div class="flex items-center gap-2">
+
+      <!-- Upload Button -->
+      <button type="button"
+        class="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        <span class="hidden lg:inline">Upload</span>
+      </button>
+
+      <!-- Dark Mode Toggle -->
+      <button type="button" (click)="toggleDarkMode()"
+        class="relative inline-flex items-center justify-center p-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-300/50 dark:border-gray-600/50 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105 active:scale-95 group overflow-hidden">
+        <div class="relative w-5 h-5">
+          <!-- Sun Icon -->
+          <svg class="absolute inset-0 h-5 w-5 text-amber-500 transition-all duration-300 transform"
+            [class.rotate-0]="!isDarkMode()" [class.opacity-100]="!isDarkMode()" [class.rotate-90]="isDarkMode()"
+            [class.opacity-0]="isDarkMode()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          </svg>
+          <!-- Moon Icon -->
+          <svg class="absolute inset-0 h-5 w-5 text-indigo-400 transition-all duration-300 transform"
+            [class.rotate-0]="isDarkMode()" [class.opacity-100]="isDarkMode()" [class.-rotate-90]="!isDarkMode()"
+            [class.opacity-0]="!isDarkMode()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </div>
+      </button>
+
+      <!-- Notifications -->
+      <button type="button"
+        class="relative inline-flex items-center justify-center p-2.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-300/50 dark:border-gray-600/50 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105 active:scale-95">
+        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <!-- Notification Badge -->
+        <span class="absolute top-0 right-0 flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+        </span>
+      </button>
+
+      <!-- User Avatar -->
+      <button type="button"
+        class="relative inline-flex items-center justify-center p-0.5 rounded-full bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg">
+        <div class="relative">
+          <img class="h-9 w-9 rounded-full border-2 border-white dark:border-gray-900 object-cover"
+            src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+            alt="User avatar">
+          <!-- Online Status -->
+          <span
+            class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-white dark:ring-gray-900"></span>
+        </div>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Search Bar -->
+  <div class="md:hidden px-4 pb-3">
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+      </div>
+      <input type="text" [value]="searchQuery()" (input)="onSearchInput($event)"
+        class="w-full pl-10 pr-4 py-2.5 bg-gray-100 dark:bg-gray-800 border border-gray-300/50 dark:border-gray-600/50 rounded-full text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all duration-200"
+        placeholder="Search...">
+    </div>
+  </div>
+</header>

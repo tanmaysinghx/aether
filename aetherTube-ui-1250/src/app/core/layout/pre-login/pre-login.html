@@ -1,0 +1,35 @@
+<div
+    class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+    <!-- Main Content Container -->
+    <div class="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md">
+            <!-- Logo/Branding (Optional) -->
+            <div class="mb-8 text-center">
+                <a class="inline-flex items-center gap-4" href="#" aria-label="Ae tube">
+                    <div class="relative">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-red-600 to-purple-600 rounded-lg blur opacity-25"></div>
+                        <div class="relative flex items-center justify-center w-14 h-14 bg-gradient-to-br from-red-500 to-purple-600 rounded-lg shadow-lg">
+                            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ae logo">
+                                <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-weight="700" font-size="12" fill="white">Ae</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent lowercase">tube</h1>
+                </a>
+            </div>
+
+            <!-- Auth Pages Content -->
+            <div
+                class="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-neutral-700">
+                <router-outlet></router-outlet>
+            </div>
+
+            <!-- Footer (Optional) -->
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-600 dark:text-neutral-400">
+                    &copy; 2025 tube. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
