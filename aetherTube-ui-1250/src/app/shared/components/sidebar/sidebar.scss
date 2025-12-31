@@ -1,7 +1,25 @@
 /* Sidebar Component Styles */
 
-/* Add component-specific overrides or utility styles here */
+/* Sidebar logo/top */
+.mb-6 { margin-bottom: 1.5rem; }
 
-.hs-overlay {
-  /* ensure overlay looks good in both light and dark modes */
+.hs-accordion-group > .mb-6 { padding-bottom: 0.25rem; }
+
+/* Logo container tweaks */
+.hs-accordion-group a[aria-label="Ae tube"] {
+  align-items: center;
 }
+
+/* Hover/interaction improvements for links */
+.hs-accordion-group a {
+  transition: transform .15s ease, background-color .15s ease;
+}
+.hs-accordion-group a:hover {
+  transform: translateX(6px);
+}
+
+/* Ensure overlay looks good in both light and dark modes */
+.hs-overlay {
+  background-clip: padding-box;
+}
+

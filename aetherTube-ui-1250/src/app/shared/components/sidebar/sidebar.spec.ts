@@ -33,4 +33,12 @@ describe('Sidebar', () => {
         expect(text).toContain('Trending');
         expect(text).toContain('Subscriptions');
     });
+
+    it('should display Ae logo with tube text', () => {
+        const compiled = fixture.nativeElement as HTMLElement;
+        const logoLink = compiled.querySelector('a[aria-label="Ae tube"]');
+        expect(logoLink).toBeTruthy();
+        const logoText = logoLink?.textContent?.trim();
+        expect(logoText).toContain('tube');
+    });
 });
