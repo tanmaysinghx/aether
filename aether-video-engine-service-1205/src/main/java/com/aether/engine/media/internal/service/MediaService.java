@@ -24,6 +24,9 @@ public class MediaService {
         job.setAppSource(request.appSource());
         job.setVideoType(request.videoType());
         job.setVisibility(request.visibility());
+        job.setUploaderId(request.uploaderId());
+        job.setDescription(request.description());
+        job.setLanguage(request.language());
         job.setMetadata(request.metadata());
         job.setStatus("PROCESSING");
 
@@ -56,7 +59,7 @@ public class MediaService {
                 }
 
                 // Perform Transcoding with Progress Tracking
-                ffmpegService.transcode(savedJob.getId(), inputPath.toString(), (percentage) -> {
+                Double duration = ffmpegService.transcode(savedJob.getId(), inputPath.toString(), (percentage) -> {
                     // Update only if percentage changed significantly or periodically?
                     // For now, let's just log and update. Hibernate might be chatty.
                     // A better approach is to throttle here.
@@ -85,6 +88,7 @@ public class MediaService {
                 // Update Status COMPLETED
                 savedJob.setStatus("COMPLETED");
                 savedJob.setProgress(100.0);
+                savedJob.setDurationSeconds(duration);
                 mediaJobRepository.save(savedJob);
 
                 // Cleanup raw file? Maybe keep it for re-transcoding?

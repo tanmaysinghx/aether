@@ -54,7 +54,7 @@ public class FFmpegServiceImpl implements FFmpegService {
     }
 
     @Override
-    public void transcode(UUID jobId, String inputPath, java.util.function.Consumer<Double> progressCallback) {
+    public Double transcode(UUID jobId, String inputPath, java.util.function.Consumer<Double> progressCallback) {
         File inputFile = new File(inputPath);
         if (!inputFile.exists()) {
             throw new RuntimeException("Input file not found: " + inputPath);
@@ -271,10 +271,10 @@ public class FFmpegServiceImpl implements FFmpegService {
             Process process = processBuilder.start();
 
             // 5. Parse Output for Progress
+            double totalDurationSeconds = 0.0;
             try (java.io.BufferedReader reader = new java.io.BufferedReader(
                     new java.io.InputStreamReader(process.getInputStream()))) {
                 String line;
-                double totalDurationSeconds = 0.0;
                 java.util.regex.Pattern durationPattern = java.util.regex.Pattern
                         .compile("Duration: (\\d{2}):(\\d{2}):(\\d{2}\\.\\d{2})");
                 java.util.regex.Pattern timePattern = java.util.regex.Pattern
@@ -317,6 +317,7 @@ public class FFmpegServiceImpl implements FFmpegService {
             if (exitCode == 0) {
                 log.info("Transcoding finished successfully for Job: {}", jobId);
                 progressCallback.accept(100.0);
+                return totalDurationSeconds > 0 ? totalDurationSeconds : 0.0;
             } else {
                 log.error("Transcoding failed for Job: {} with exit code: {}", jobId, exitCode);
                 throw new RuntimeException("FFmpeg exited with code " + exitCode);

@@ -29,6 +29,11 @@ public class MediaJob {
     private String visibility; // PUBLIC, PRIVATE, UNLISTED
     private String thumbnailUrl;
 
+    private UUID uploaderId;
+    private String description;
+    private Double durationSeconds;
+    private String language; // e.g., "en", "hi"
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private Map<String, Object> metadata;

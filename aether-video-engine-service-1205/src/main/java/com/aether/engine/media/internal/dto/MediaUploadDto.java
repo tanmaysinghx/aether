@@ -14,6 +14,8 @@ public class MediaUploadDto {
     private String appSource;
     private String videoType;
     private String visibility;
+    private String description;
+    private String language;
     private String metadata; // Receiving as JSON string to be parsed manually typically, or we can use
                              // custom binding.
 }

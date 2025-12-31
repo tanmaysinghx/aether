@@ -34,7 +34,9 @@ public class MediaController {
     private final ObjectMapper objectMapper;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<MediaJobDto> uploadVideo(@ModelAttribute MediaUploadDto uploadDto) {
+    public ApiResponse<MediaJobDto> uploadVideo(
+            @org.springframework.web.bind.annotation.RequestHeader(value = "X-User-Id", defaultValue = "00000000-0000-0000-0000-000000000000") String userIdHeader,
+            @ModelAttribute MediaUploadDto uploadDto) {
 
         log.info("Received upload request for title: {}", uploadDto.getTitle());
 
@@ -49,7 +51,8 @@ public class MediaController {
         }
 
         UploadRequest request = new UploadRequest(uploadDto.getTitle(), uploadDto.getAppSource(),
-                uploadDto.getVideoType(), uploadDto.getVisibility(), metadata);
+                uploadDto.getVideoType(), uploadDto.getVisibility(), uploadDto.getDescription(),
+                uploadDto.getLanguage(), UUID.fromString(userIdHeader), metadata);
         MediaJob job = mediaService.processUpload(uploadDto.getFile(), request);
 
         MediaJobDto jobDto = MediaJobDto.builder()
