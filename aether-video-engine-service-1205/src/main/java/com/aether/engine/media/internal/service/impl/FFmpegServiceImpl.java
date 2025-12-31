@@ -21,6 +21,39 @@ public class FFmpegServiceImpl implements FFmpegService {
     private String storageLocation;
 
     @Override
+    public String generateThumbnail(UUID jobId, String inputPath) {
+        try {
+            String outputDir = java.nio.file.Paths.get(storageLocation, "hls", jobId.toString()).toString();
+            new File(outputDir).mkdirs();
+
+            String thumbnailPath = java.nio.file.Paths.get(outputDir, "thumbnail.jpg").toString();
+
+            // FFMPEG command to extract frame at 1 second
+            ProcessBuilder pb = new ProcessBuilder(
+                    "ffmpeg", "-y",
+                    "-i", inputPath,
+                    "-ss", "00:00:01.000",
+                    "-vframes", "1",
+                    thumbnailPath);
+
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0 && new File(thumbnailPath).exists()) {
+                log.info("Thumbnail generated for Job {}: {}", jobId, thumbnailPath);
+                return "hls/" + jobId + "/thumbnail.jpg"; // Return relative path/URL suffix
+            } else {
+                log.warn("Failed to generate thumbnail for Job {}", jobId);
+                return null;
+            }
+        } catch (Exception e) {
+            log.error("Error generating thumbnail", e);
+            return null;
+        }
+    }
+
+    @Override
     public void transcode(UUID jobId, String inputPath, java.util.function.Consumer<Double> progressCallback) {
         File inputFile = new File(inputPath);
         if (!inputFile.exists()) {
@@ -55,7 +88,16 @@ public class FFmpegServiceImpl implements FFmpegService {
             // 3. Inspect Input Media (Audio & Resolution)
             boolean hasAudio = hasAudioStream(inputPath);
             int videoHeight = getVideoHeight(inputPath);
-            log.info("Job {}: Audio stream: {}, Video Height: {}", jobId, hasAudio, videoHeight);
+            int videoWidth = getVideoWidth(inputPath);
+            log.info("Job {}: Audio: {}, Height: {}, Width: {}", jobId, hasAudio, videoHeight, videoWidth);
+
+            boolean isVertical = videoWidth < videoHeight;
+
+            // Determine Quality Checks based on the smaller dimension (resolution
+            // convention)
+            int minDim = Math.min(videoWidth, videoHeight);
+            boolean add1080p = minDim >= 1080;
+            boolean add4k = minDim >= 2160;
 
             // 4. Build FFmpeg Command Logic
             java.util.List<String> command = new java.util.ArrayList<>();
@@ -63,18 +105,12 @@ public class FFmpegServiceImpl implements FFmpegService {
             command.add("-i");
             command.add(inputPath);
 
-            // Determine Quality Checks
-            boolean add1080p = videoHeight >= 1080;
-            boolean add4k = videoHeight >= 2160;
-
             // Construct Filter Complex
-            // Split based on how many streams we are creating
             int splitCount = 2 + (add1080p ? 1 : 0) + (add4k ? 1 : 0);
 
             StringBuilder filterComplex = new StringBuilder();
             filterComplex.append("[0:v]split=").append(splitCount);
 
-            // Outputs: [v480], [v720], [v1080], [v4k]
             filterComplex.append("[v1][v2]");
             if (add1080p)
                 filterComplex.append("[v3]");
@@ -82,13 +118,21 @@ public class FFmpegServiceImpl implements FFmpegService {
                 filterComplex.append("[v4]");
             filterComplex.append(";");
 
-            filterComplex.append("[v1]scale=w=-2:h=480[v480];");
-            filterComplex.append("[v2]scale=w=-2:h=720[v720]");
+            // Scaling Logic:
+            // Horizontal: scale=w=-2:h=TARGET
+            // Vertical: scale=w=TARGET:h=-2
+            String scale480 = isVertical ? "scale=w=480:h=-2" : "scale=w=-2:h=480";
+            String scale720 = isVertical ? "scale=w=720:h=-2" : "scale=w=-2:h=720";
+            String scale1080 = isVertical ? "scale=w=1080:h=-2" : "scale=w=-2:h=1080";
+            String scale4k = isVertical ? "scale=w=2160:h=-2" : "scale=w=-2:h=2160";
+
+            filterComplex.append("[v1]").append(scale480).append("[v480];");
+            filterComplex.append("[v2]").append(scale720).append("[v720]");
             if (add1080p) {
-                filterComplex.append(";[v3]scale=w=-2:h=1080[v1080]");
+                filterComplex.append(";[v3]").append(scale1080).append("[v1080]");
             }
             if (add4k) {
-                filterComplex.append(";[v4]scale=w=-2:h=2160[v4k]");
+                filterComplex.append(";[v4]").append(scale4k).append("[v4k]");
             }
 
             command.add("-filter_complex");
@@ -301,6 +345,25 @@ public class FFmpegServiceImpl implements FFmpegService {
             log.warn("Failed to probe video height for file: {}", inputPath, e);
         }
         return 0; // Default to 0 (assume low quality if probe fails)
+    }
+
+    private int getVideoWidth(String inputPath) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                    "ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width", "-of",
+                    "csv=s=x:p=0", inputPath);
+            Process process = pb.start();
+            try (java.io.BufferedReader reader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(process.getInputStream()))) {
+                String line = reader.readLine();
+                if (line != null && !line.trim().isEmpty()) {
+                    return Integer.parseInt(line.trim());
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Failed to probe video width for file: {}", inputPath, e);
+        }
+        return 0;
     }
 
     private boolean hasAudioStream(String inputPath) {

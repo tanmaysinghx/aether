@@ -1,6 +1,6 @@
 # Aether - Advanced Video Streaming Engine
 
-![Java](https://img.shields.io/badge/Java-25%20(Preview)-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.1-green) ![FFmpeg](https://img.shields.io/badge/FFmpeg-Processed-blue) ![Status](https://img.shields.io/badge/Status-Active-success)
+![Java](https://img.shields.io/badge/Java-25%20(Preview)-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.1-green) ![Angular](https://img.shields.io/badge/Angular-21.0.4-red) ![FFmpeg](https://img.shields.io/badge/FFmpeg-Processed-blue) ![Status](https://img.shields.io/badge/Status-Active-success)
 
 **Aether** is a next-generation video streaming platform designed for high-performance transcoding and adaptive bitrate streaming. It leverages the latest advancements in the Java ecosystem (Virtual Threads) and robust media processing tools (FFmpeg) to deliver a seamless viewing experience.
 
@@ -21,8 +21,9 @@ Aether is built to handle the complexities of modern video delivery:
     *   [Backend Documentation](./aether-video-engine-service-1205/README.md)
 
 2.  **Frontend Client (`aetherTube-ui`)**:
-    *   Simple HLS.js based player for verifying streams.
-    *   Demonstrates adaptive switching and progress tracking.
+    *   **Angular 21** Application.
+    *   Styled with **Tailwind CSS 3.4** and **Preline UI**.
+    *   Demonstrates HLS playback and modern UI components.
 
 ## ✨ Key Features
 
@@ -44,7 +45,13 @@ Navigate to the backend service and follow the setup instructions:
 [Go to Backend README](./aether-video-engine-service-1205/README.md)
 
 ### 3. Verification Client
-Open `aetherTube-ui-1250/index.html` in your browser to test the stream playback.
+Navigate to `aetherTube-ui-1250` and start the development server:
+```bash
+cd aetherTube-ui-1250
+npm install
+npm start
+```
+Then open `http://localhost:4200` to view the application.
 
 ## 📜 License
 

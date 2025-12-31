@@ -48,6 +48,13 @@ public class MediaService {
                 storageService.store(file.getInputStream(), rawFilename);
                 java.nio.file.Path inputPath = storageService.getAbsolutePath(rawFilename);
 
+                // Generate Thumbnail
+                String thumbnailUrl = ffmpegService.generateThumbnail(savedJob.getId(), inputPath.toString());
+                if (thumbnailUrl != null) {
+                    savedJob.setThumbnailUrl(thumbnailUrl);
+                    mediaJobRepository.save(savedJob);
+                }
+
                 // Perform Transcoding with Progress Tracking
                 ffmpegService.transcode(savedJob.getId(), inputPath.toString(), (percentage) -> {
                     // Update only if percentage changed significantly or periodically?

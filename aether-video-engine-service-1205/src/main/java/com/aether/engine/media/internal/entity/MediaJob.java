@@ -27,6 +27,7 @@ public class MediaJob {
 
     private String videoType; // REEL, MOVIE, EPISODE, SHORT
     private String visibility; // PUBLIC, PRIVATE, UNLISTED
+    private String thumbnailUrl;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
