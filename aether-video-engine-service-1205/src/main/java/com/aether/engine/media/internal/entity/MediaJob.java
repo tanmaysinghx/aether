@@ -25,6 +25,9 @@ public class MediaJob {
     private Double progress; // 0.0 to 100.0
     private String appSource; // TUBE or PLAY
 
+    private String videoType; // REEL, MOVIE, EPISODE, SHORT
+    private String visibility; // PUBLIC, PRIVATE, UNLISTED
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private Map<String, Object> metadata;

@@ -48,7 +48,8 @@ public class MediaController {
             }
         }
 
-        UploadRequest request = new UploadRequest(uploadDto.getTitle(), uploadDto.getAppSource(), metadata);
+        UploadRequest request = new UploadRequest(uploadDto.getTitle(), uploadDto.getAppSource(),
+                uploadDto.getVideoType(), uploadDto.getVisibility(), metadata);
         MediaJob job = mediaService.processUpload(uploadDto.getFile(), request);
 
         MediaJobDto jobDto = MediaJobDto.builder()

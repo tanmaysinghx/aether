@@ -22,6 +22,8 @@ public class MediaService {
         MediaJob job = new MediaJob();
         job.setTitle(request.title());
         job.setAppSource(request.appSource());
+        job.setVideoType(request.videoType());
+        job.setVisibility(request.visibility());
         job.setMetadata(request.metadata());
         job.setStatus("PROCESSING");
 
