@@ -11,22 +11,22 @@ module.exports = {
         extend: {
             colors: {
                 primary: {
-                    DEFAULT: colors.blue[600],
-                    hover: colors.blue[700],
+                    DEFAULT: 'var(--primary-default)',
+                    hover: 'var(--primary-hover)',
                     foreground: colors.white,
-                    dark: colors.blue[500],
-                    'dark-hover': colors.blue[600],
+                    dark: 'var(--primary-dark)',
+                    'dark-hover': 'var(--primary-dark-hover)',
                 },
                 surface: {
-                    DEFAULT: colors.white,
-                    dark: colors.gray[950],
-                    hover: colors.gray[50], // light hover
-                    'dark-hover': colors.gray[800],
+                    DEFAULT: 'var(--colors-surface, #ffffff)',
+                    dark: 'var(--colors-surface-dark, #030712)', // gray-950
+                    hover: 'var(--colors-surface-hover, #f9fafb)', // gray-50
+                    'dark-hover': 'var(--colors-surface-dark-hover, #1f2937)', // gray-800
                 },
                 // Semantic grays
                 border: {
-                    DEFAULT: colors.gray[200],
-                    dark: colors.gray[800],
+                    DEFAULT: 'var(--colors-border, #e5e7eb)', // gray-200
+                    dark: 'var(--colors-border-dark, #1f2937)', // gray-800
                 },
                 text: {
                     main: colors.gray[900],        // dark text for light mode

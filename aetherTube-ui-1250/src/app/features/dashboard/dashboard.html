@@ -35,7 +35,7 @@
 
     <!-- Sparks Section -->
     <div
-        class="py-6 border-t border-b border-border/50 dark:border-border-dark/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50/50 to-transparent dark:from-blue-900/10 dark:to-transparent">
+        class="py-6 border-t border-b border-border/50 dark:border-border-dark dark:border-opacity-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50/50 to-transparent dark:from-blue-900/10 dark:to-transparent">
         <div class="flex items-center gap-3 mb-5">
             <div class="p-1.5 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600">
                 <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -46,19 +46,79 @@
             <h2 class="text-2xl font-bold text-text-main dark:text-text-dark-main tracking-tight">Sparks</h2>
         </div>
 
+        @if (sparksLoading()) {
+        <!-- Skeleton for Sparks -->
+        <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+            @for (i of [1,2,3,4,5]; track i) {
+            <div
+                class="flex-shrink-0 w-44 sm:w-52 h-64 bg-surface-hover dark:bg-surface-dark-hover rounded-xl animate-pulse">
+            </div>
+            }
+        </div>
+        } @else if (sparks().length === 0) {
+        <!-- Empty State for Sparks -->
+        <div class="flex flex-col items-center justify-center py-12 text-center">
+            <svg class="w-32 h-32 text-border dark:text-border-dark mb-4" viewBox="0 0 200 200" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <circle cx="100" cy="100" r="80" stroke="currentColor" stroke-width="4" stroke-dasharray="10 10"
+                    opacity="0.5" />
+                <path d="M100 60V140M60 100H140" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                <path d="M85 85L115 115M115 85L85 115" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                <circle cx="100" cy="100" r="30" stroke="currentColor" stroke-width="4" class="text-primary" />
+            </svg>
+            <p class="text-lg font-semibold text-text-main dark:text-text-dark-main">No sparks found</p>
+            <p class="text-sm text-text-muted">The feed is distinctively quiet today.</p>
+        </div>
+        } @else {
         <!-- Horizontal Scroll Container -->
         <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x snap-mandatory">
-            @for (spark of sparks; track spark.id) {
+            @for (spark of sparks(); track spark.id) {
             <div class="flex-shrink-0 w-44 sm:w-52 snap-start">
                 <app-spark-card [spark]="spark"></app-spark-card>
             </div>
             }
         </div>
+        }
     </div>
+
+    <!-- Empty State -->
+    @if (!isLoading() && videos().length === 0) {
+    <div class="col-span-full flex flex-col items-center justify-center py-24 text-center animate-fade-in">
+        <div class="relative mb-8 group">
+            <!-- Premium Vector Illustration -->
+            <svg class="w-64 h-64 mx-auto" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Blob -->
+                <path
+                    d="M320.5 150.5C320.5 233.343 253.343 300.5 170.5 300.5C87.6573 300.5 20.5 233.343 20.5 150.5C20.5 67.6573 87.6573 0.5 170.5 0.5C253.343 0.5 320.5 67.6573 320.5 150.5Z"
+                    fill="currentColor" class="text-surface-hover dark:text-surface-dark-hover" opacity="0.5" />
+                <!-- Screen/Monitor -->
+                <rect x="100" y="60" width="200" height="150" rx="12" fill="currentColor"
+                    class="text-surface dark:text-surface-dark" stroke="currentColor"
+                    class="text-border dark:text-border-dark" stroke-width="4" />
+                <path d="M100 180H300" stroke="currentColor" class="text-border dark:text-border-dark" stroke-width="2"
+                    opacity="0.3" />
+                <!-- Play Button Geometric -->
+                <circle cx="200" cy="135" r="30" fill="currentColor" class="text-primary" fill-opacity="0.1"
+                    stroke="currentColor" class="text-primary" stroke-width="2" />
+                <path d="M190 120L215 135L190 150V120Z" fill="currentColor" class="text-primary" />
+                <!-- Floating Elements -->
+                <circle cx="80" cy="220" r="15" fill="currentColor" class="text-primary" fill-opacity="0.2" />
+                <rect x="310" y="50" width="30" height="30" rx="6" fill="currentColor" class="text-purple-500"
+                    fill-opacity="0.2" transform="rotate(15 325 65)" />
+                <path d="M340 240L360 260M360 240L340 260" stroke="currentColor" class="text-text-muted"
+                    stroke-width="4" stroke-linecap="round" />
+            </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-text-main dark:text-text-dark-main mb-3">Feed Empty</h3>
+        <p class="text-text-muted max-w-md mx-auto text-lg">
+            We couldn't find any videos to display right now. This is a great opportunity to be the first to upload!
+        </p>
+    </div>
+    }
 
     <!-- Video Grid Part 2 -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-10 gap-x-6">
-        @if (!isLoading()) {
+        @if (!isLoading() && videos().length > 8) {
         @for (video of videos().slice(8); track video.id) {
         <app-video-card [video]="video"></app-video-card>
         }

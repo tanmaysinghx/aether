@@ -40,8 +40,28 @@ export class VideoPlayer implements OnInit, OnDestroy, OnChanges {
     volume = signal(1);
     isMuted = signal(false);
     isFullscreen = signal(false);
-    isHovering = signal(false);
+    isControlsVisible = signal(true); // Default true
     isLoading = signal(true);
+
+    private hideControlsTimeout: any;
+
+    onMouseMove() {
+        this.isControlsVisible.set(true);
+        this.resetHideTimeout();
+    }
+
+    onMouseLeave() {
+        if (this.isPlaying()) {
+            this.hideControlsTimeout = setTimeout(() => this.isControlsVisible.set(false), 2000);
+        }
+    }
+
+    private resetHideTimeout() {
+        clearTimeout(this.hideControlsTimeout);
+        if (this.isPlaying()) {
+            this.hideControlsTimeout = setTimeout(() => this.isControlsVisible.set(false), 3000);
+        }
+    }
 
     // Quality Settings
     qualityLevels = signal<{ height: number, level: number }[]>([]);
@@ -161,21 +181,26 @@ export class VideoPlayer implements OnInit, OnDestroy, OnChanges {
         const video = this.videoElementRef.nativeElement;
         if (video.paused) {
             video.play();
-            this.isPlaying.set(true);
-            this.startProgressSync();
         } else {
             video.pause();
-            this.isPlaying.set(false);
-            this.saveProgress(); // Save immediately on pause
-            this.stopProgressSync();
         }
+    }
+
+    onPlay() {
+        this.isPlaying.set(true);
+        this.startProgressSync();
+    }
+
+    onPause() {
+        this.isPlaying.set(false);
+        this.stopProgressSync();
+        this.saveProgress();
     }
 
     onTimeUpdate() {
         const video = this.videoElementRef.nativeElement;
         this.currentTime.set(video.currentTime);
         this.duration.set(video.duration || 0);
-        this.isPlaying.set(!video.paused);
     }
 
     seek(event: Event) {

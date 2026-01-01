@@ -22,5 +22,23 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/watch/watch').then(m => m.WatchComponent)
             }
         ]
+    },
+    {
+        path: 'studio',
+        loadComponent: () => import('./core/layout/studio-layout/studio-layout').then(m => m.StudioLayout),
+        children: [
+            {
+                path: '',
+                loadComponent: () => import('./features/studio/stats/studio-stats').then(m => m.StudioStats)
+            },
+            {
+                path: 'content',
+                loadComponent: () => import('./features/studio/content/studio-content').then(m => m.StudioContent)
+            },
+            {
+                path: 'upload',
+                loadComponent: () => import('./features/studio/upload/upload-video').then(m => m.UploadVideo)
+            }
+        ]
     }
 ];

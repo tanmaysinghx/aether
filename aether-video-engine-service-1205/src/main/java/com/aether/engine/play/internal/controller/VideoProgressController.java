@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class VideoProgressController {
 
     private final VideoProgressRepository videoProgressRepository;
+    private final com.aether.engine.media.internal.repository.MediaJobRepository mediaJobRepository;
+    private final com.aether.engine.media.internal.service.MediaService mediaService;
 
     @PostMapping
     public ApiResponse<Void> updateProgress(
@@ -39,8 +41,7 @@ public class VideoProgressController {
                 return ApiResponse.error("ERR-400", "Invalid payload: videoId and progressSeconds are required", null);
             }
 
-            Double progress = ((Number) progressObj).doubleValue();
-
+            Double currentProgress = ((Number) progressObj).doubleValue();
             UUID videoId = UUID.fromString(videoIdStr);
 
             VideoProgress videoProgress = videoProgressRepository.findByUserIdAndVideoIdAndAppId(userId, videoId, appId)
@@ -48,12 +49,38 @@ public class VideoProgressController {
                             .userId(userId)
                             .videoId(videoId)
                             .appId(appId)
+                            .progressSeconds(0.0)
                             .build());
 
-            videoProgress.setProgressSeconds(progress);
-            videoProgress.setLastUpdated(LocalDateTime.now());
+            Double previousProgress = videoProgress.getProgressSeconds();
+            if (previousProgress == null)
+                previousProgress = 0.0;
 
+            // Update Progress in DB
+            videoProgress.setProgressSeconds(currentProgress);
+            videoProgress.setLastUpdated(LocalDateTime.now());
             videoProgressRepository.save(videoProgress);
+
+            // View Count Logic (45% Threshold)
+            final Double finalPreviousProgress = previousProgress; // effective final for lambda if needed (not here but
+                                                                   // good practice)
+
+            mediaJobRepository.findById(videoId).ifPresent(job -> {
+                Double duration = job.getDurationSeconds();
+                if (duration != null && duration > 0) {
+                    double thresholdBytes = duration * 0.45;
+
+                    boolean previouslyBelow = finalPreviousProgress < thresholdBytes;
+                    boolean currentlyAbove = currentProgress >= thresholdBytes;
+
+                    if (previouslyBelow && currentlyAbove) {
+                        mediaService.incrementViewCount(videoId);
+                        log.info("View count incremented for video {} by user {} (crossed 45% threshold)", videoId,
+                                userId);
+                    }
+                }
+            });
+
             return ApiResponse.success(null, "Progress updated");
 
         } catch (Exception e) {

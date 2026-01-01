@@ -20,6 +20,7 @@ public class MediaJobDto {
     private UUID uploaderId;
     private String description;
     private Double durationSeconds;
+    private Long viewCount;
     private String language;
     private Map<String, Object> metadata;
     private LocalDateTime createdAt;

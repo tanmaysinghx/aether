@@ -26,4 +26,19 @@ export class Sidebar {
     // Mock unsubscribe
     this.subscribedChannels = this.subscribedChannels.filter(c => c.id !== channelId);
   }
+
+  adultCategories = [
+    { name: 'Dashboard', icon: 'dashboard', link: '/adult/dashboard' },
+    { name: 'Live Cams', icon: 'video', link: '/adult/live' },
+    { name: 'Premium Videos', icon: 'star', link: '/adult/premium' },
+    { name: 'Top Rated', icon: 'trending-up', link: '/adult/top-rated' },
+    { name: 'Categories', icon: 'list', link: '/adult/categories' },
+    { name: 'Models', icon: 'users', link: '/adult/models' },
+    { name: 'Aether Studio', icon: 'layout-dashboard', link: '/studio' }
+  ];
+
+  toggleAdultTheme(event: Event) {
+    event.preventDefault();
+    this.ui.toggleAdultTheme();
+  }
 }

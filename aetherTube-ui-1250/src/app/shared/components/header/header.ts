@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
@@ -13,7 +14,7 @@ export class Header implements OnInit {
   isSearchFocused = signal(false);
   searchQuery = signal('');
 
-  constructor(public ui: UiService) {}
+  constructor(public ui: UiService) { }
 
   toggleSidebar() {
     this.ui.toggleSidebar();
@@ -31,6 +32,9 @@ export class Header implements OnInit {
   }
 
   toggleDarkMode() {
+    // Disable toggle if in Adult Theme (enforced dark mode)
+    if (this.ui.isAdultTheme()) return;
+
     const newValue = !this.isDarkMode();
     this.isDarkMode.set(newValue);
 

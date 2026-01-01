@@ -2,4 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    /* Default (Blue) */
+    --primary-default: #2563eb;
+    /* blue-600 */
+    --primary-hover: #1d4ed8;
+    /* blue-700 */
+    --primary-dark: #3b82f6;
+    /* blue-500 */
+    --primary-dark-hover: #2563eb;
+    /* blue-600 */
+}
+
+.theme-adult {
+    /* Adult (Vibrant Crimson/Neon Red) */
+    --primary-default: #ff0033;
+    /* Crimson Neon */
+    --primary-hover: #cc0029;
+    /* Darker Crimson */
+    --primary-dark: #ff3355;
+    /* Lighter Crimson/Pinkish Red */
+    --primary-dark-hover: #ff0033;
+    /* Crimson Neon */
+
+    /* Spicy Dark Backgrounds */
+    --colors-surface-dark: #0f0505;
+    /* Deep Rose/Black */
+    --colors-surface-dark-hover: #2a0a0a;
+    /* Dark Red/Black Hover */
+    --colors-border-dark: #4c0519;
+    /* Deep Rose Border */
+}
+
+/* Apply gradient to body when in adult theme */
+body.theme-adult {
+    /* Deep Charcoal/Black Radial - Matches sidebartone but with depth */
+    background-image: radial-gradient(circle at 50% 0%, #1f050a, #050101);
+    background-attachment: fixed;
+}
+
 /* You can add global styles to this file, and also import other style files */

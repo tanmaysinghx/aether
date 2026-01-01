@@ -59,6 +59,12 @@ public class MediaController {
 
     }
 
+    @PostMapping("/{id}/view")
+    public ApiResponse<Void> incrementViewCount(@PathVariable UUID id) {
+        mediaService.incrementViewCount(id);
+        return ApiResponse.success(null, "View count incremented");
+    }
+
     @GetMapping("/{id}")
     public ApiResponse<MediaJobDto> getJobStatus(@PathVariable UUID id) {
         MediaJob job = mediaJobRepository.findById(id)
@@ -88,6 +94,7 @@ public class MediaController {
                 .uploaderId(job.getUploaderId())
                 .description(job.getDescription())
                 .durationSeconds(job.getDurationSeconds())
+                .viewCount(job.getViewCount())
                 .language(job.getLanguage())
                 .metadata(job.getMetadata())
                 .createdAt(job.getCreatedAt())

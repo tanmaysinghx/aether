@@ -33,6 +33,7 @@ public class MediaJob {
     private String description;
     private Double durationSeconds;
     private String language; // e.g., "en", "hi"
+    private Long viewCount = 0L;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")

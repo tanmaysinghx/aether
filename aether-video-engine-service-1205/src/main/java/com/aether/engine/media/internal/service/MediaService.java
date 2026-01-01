@@ -108,6 +108,11 @@ public class MediaService {
         return mediaJobRepository.findByAppSourceAndStatusOrderByCreatedAtDesc(appSource, "COMPLETED");
     }
 
+    @org.springframework.transaction.annotation.Transactional
+    public void incrementViewCount(java.util.UUID jobId) {
+        mediaJobRepository.incrementViewCount(jobId);
+    }
+
     private boolean shouldUpdate(Double current, Double newProgress) {
         if (current == null)
             return true;

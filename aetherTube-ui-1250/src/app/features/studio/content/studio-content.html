@@ -1,0 +1,162 @@
+<div class="px-8 py-8 animate-fade-in">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-text-main dark:text-text-dark-main">Channel Content</h1>
+            <p class="text-text-muted dark:text-text-dark-muted text-sm mt-1">Manage your videos and live streams</p>
+        </div>
+        <div class="flex gap-3">
+            <button
+                class="px-4 py-2 border border-border dark:border-border-dark rounded-lg flex items-center gap-2 hover:bg-surface-hover dark:hover:bg-surface-dark-hover transition-colors text-text-main dark:text-text-dark-main text-sm font-medium">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                Filter
+            </button>
+            <button routerLink="/studio/upload"
+                class="px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg flex items-center gap-2 transition-colors text-sm font-bold shadow-lg shadow-primary/20">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Create
+            </button>
+        </div>
+    </div>
+
+    <!-- Table Container -->
+    <div
+        class="bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-xl overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr
+                        class="border-b border-border dark:border-border-dark bg-surface-hover/50 dark:bg-surface-dark-hover/30">
+                        <th
+                            class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-muted dark:text-text-dark-muted w-[40%]">
+                            Video</th>
+                        <th
+                            class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-muted dark:text-text-dark-muted">
+                            Visibility</th>
+                        <th
+                            class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-muted dark:text-text-dark-muted">
+                            Date</th>
+                        <th
+                            class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-muted dark:text-text-dark-muted text-right">
+                            Views</th>
+                        <th
+                            class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-muted dark:text-text-dark-muted text-right">
+                            Comments</th>
+                        <th
+                            class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-muted dark:text-text-dark-muted text-right">
+                            Likes</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border dark:divide-border-dark">
+                    @for (video of videos(); track video.id) {
+                    <tr class="group hover:bg-surface-hover dark:hover:bg-surface-dark-hover/50 transition-colors">
+                        <!-- Video Info -->
+                        <td class="py-4 px-6">
+                            <div class="flex gap-4">
+                                <div class="relative w-28 h-16 rounded-lg overflow-hidden shrink-0 bg-black">
+                                    <img [src]="video.thumbnail"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <div
+                                        class="absolute bottom-1 right-1 bg-black/80 px-1 rounded text-[10px] text-white font-medium">
+                                        12:05</div>
+                                </div>
+                                <div class="flex flex-col justify-center gap-1 min-w-0">
+                                    <h3
+                                        class="text-sm font-bold text-text-main dark:text-text-dark-main truncate hover:text-primary cursor-pointer">
+                                        {{ video.title }}</h3>
+                                    <p class="text-xs text-text-muted dark:text-text-dark-muted truncate max-w-[200px]">
+                                        {{ video.description }}</p>
+                                    @if(video.status === 'Processing') {
+                                    <div class="flex items-center gap-1.5 mt-1">
+                                        <div
+                                            class="animate-spin w-3 h-3 border-2 border-primary border-t-transparent rounded-full">
+                                        </div>
+                                        <span
+                                            class="text-[10px] font-bold text-primary uppercase tracking-wide">Processing
+                                            {{ video.progress || 0 }}%...</span>
+                                    </div>
+                                    } @else if (video.status === 'Failed') {
+                                    <div class="flex items-center gap-1.5 mt-1">
+                                        <svg class="w-3 h-3 text-red-500" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span
+                                            class="text-[10px] font-bold text-red-500 uppercase tracking-wide">Processing
+                                            Failed</span>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Visibility -->
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-2">
+                                @if (video.visibility === 'Public') {
+                                <svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                } @else if (video.visibility === 'Unlisted') {
+                                <svg class="w-4 h-4 text-text-muted dark:text-text-dark-muted" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                                }
+                                <span class="text-sm text-text-main dark:text-text-dark-main">{{ video.visibility
+                                    }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Date -->
+                        <td class="py-4 px-6">
+                            <div class="flex flex-col">
+                                <span class="text-sm text-text-main dark:text-text-dark-main">{{ formatDate(video.date)
+                                    }}</span>
+                                <span class="text-xs text-text-muted dark:text-text-dark-muted">Published</span>
+                            </div>
+                        </td>
+
+                        <!-- Stats -->
+                        <td class="py-4 px-6 text-right text-sm text-text-main dark:text-text-dark-main font-medium">{{
+                            video.views }}</td>
+                        <td class="py-4 px-6 text-right text-sm text-text-main dark:text-text-dark-main font-medium">{{
+                            video.comments }}</td>
+                        <td class="py-4 px-6 text-right text-sm text-text-main dark:text-text-dark-main font-medium">{{
+                            video.likes }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination (Dummy) -->
+        <div
+            class="border-t border-border dark:border-border-dark px-6 py-4 flex items-center justify-end gap-2 bg-surface-hover/50 dark:bg-surface-dark-hover/30">
+            <span class="text-xs text-text-muted dark:text-text-dark-muted mr-4">Rows per page: 10</span>
+            <button
+                class="p-1 rounded hover:bg-border dark:hover:bg-white/10 text-text-muted dark:text-text-dark-muted disabled:opacity-50">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button
+                class="p-1 rounded hover:bg-border dark:hover:bg-white/10 text-text-muted dark:text-text-dark-muted">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
