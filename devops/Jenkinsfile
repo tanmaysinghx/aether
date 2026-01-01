@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    environment {
+        // Global variables
+        BACKEND_DIR = 'aether-video-engine-service-1205'
+        FRONTEND_DIR = 'aetherTube-ui-1250'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from SCM (Git)
+                checkout scm
+            }
+        }
+
+        stage('Build Backend') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    script {
+                        if (isUnix()) {
+                            sh 'chmod +x mvnw'
+                            sh './mvnw clean package -DskipTests'
+                        } else {
+                            bat 'mvnw.cmd clean package -DskipTests'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir("${FRONTEND_DIR}") {
+                    context: {
+                        if (isUnix()) {
+                            sh 'npm install'
+                            sh 'npm run build'
+                        } else {
+                            bat 'npm install'
+                            bat 'npm run build'
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Example Docker Build Stage (Commented out until Dockerfiles are ready)
+        /*
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    docker.build("aether-backend:latest", "${BACKEND_DIR}")
+                    docker.build("aether-frontend:latest", "${FRONTEND_DIR}")
+                }
+            }
+        }
+        */
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Build successful!'
+        }
+        failure {
+            echo 'Build failed.'
+        }
+    }
+}

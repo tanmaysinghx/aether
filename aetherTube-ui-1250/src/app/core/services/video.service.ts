@@ -14,6 +14,15 @@ export interface VideoFeedItem {
     appSource: string;
 }
 
+export interface VideoDetails extends VideoFeedItem {
+    description: string;
+    visibility: string;
+    language: string;
+    tags: string[];
+    category: string;
+    status: string;
+}
+
 export interface ApiResponse<T> {
     code: string;
     data: T;
@@ -43,6 +52,10 @@ export class VideoService {
 
     getFeed(appSource: string = 'TUBE'): Observable<ApiResponse<VideoFeedItem[]>> {
         return this.http.get<ApiResponse<VideoFeedItem[]>>(`${this.apiUrl}/media/feed?appSource=${appSource}`);
+    }
+
+    getVideo(id: string): Observable<ApiResponse<VideoDetails>> {
+        return this.http.get<ApiResponse<VideoDetails>>(`${this.apiUrl}/media/${id}`);
     }
 
     getMyVideos(): Observable<ApiResponse<VideoFeedItem[]>> {

@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  aether-backend:
+    build:
+      context: ../aether-video-engine-service-1205
+      dockerfile: Dockerfile
+    container_name: aether-backend
+    ports:
+      - "1205:1205"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - ./video_data:/app/video_storage
+    networks:
+      - aether-network
+    restart: unless-stopped
+
+  aether-frontend:
+    build:
+      context: ../aetherTube-ui-1250
+      dockerfile: Dockerfile
+    container_name: aether-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - aether-backend
+    networks:
+      - aether-network
+    restart: unless-stopped
+
+networks:
+  aether-network:
+    driver: bridge
+
+volumes:
+  video_data:

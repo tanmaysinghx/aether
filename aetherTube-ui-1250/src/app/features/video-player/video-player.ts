@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, ElementRef, ViewChild, signal, inject } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, ElementRef, ViewChild, signal, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VideoService } from '../../core/services/video.service';
 import { forkJoin, of } from 'rxjs';
@@ -258,8 +258,103 @@ export class VideoPlayer implements OnInit, OnDestroy, OnChanges {
         return `${m}:${s.toString().padStart(2, '0')}`;
     }
 
+    // --- Keyboard Shortcuts & Gestures ---
+
+    @HostListener('window:keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        if (!this.videoId) return;
+
+        // Ignore if user is typing in an input
+        const target = event.target as HTMLElement;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
+
+        switch (event.key.toLowerCase()) {
+            case ' ':
+            case 'k':
+                event.preventDefault();
+                this.togglePlay();
+                this.onMouseMove(); // Show controls
+                break;
+            case 'f':
+                event.preventDefault();
+                this.toggleFullscreen();
+                break;
+            case 'm':
+                event.preventDefault();
+                this.toggleMute();
+                break;
+            case 'arrowleft':
+                event.preventDefault();
+                this.seekRelative(-5);
+                this.triggerSkipAnimation('backward');
+                break;
+            case 'arrowright':
+                event.preventDefault();
+                this.seekRelative(5);
+                this.triggerSkipAnimation('forward');
+                break;
+            case 'arrowup':
+                event.preventDefault();
+                this.adjustVolume(0.1);
+                break;
+            case 'arrowdown':
+                event.preventDefault();
+                this.adjustVolume(-0.1);
+                break;
+        }
+    }
+
+    seekRelative(seconds: number) {
+        const video = this.videoElementRef.nativeElement;
+        video.currentTime = Math.max(0, Math.min(video.duration, video.currentTime + seconds));
+        this.saveProgress();
+        this.onMouseMove();
+    }
+
+    adjustVolume(delta: number) {
+        const video = this.videoElementRef.nativeElement;
+        const newVol = Math.max(0, Math.min(1, video.volume + delta));
+        video.volume = newVol;
+        this.volume.set(newVol);
+        this.isMuted.set(newVol === 0);
+        this.onMouseMove();
+    }
+
+    // Skip Animation State
+    skipAnimation = signal<'forward' | 'backward' | null>(null);
+    private skipTimeout: any;
+
+    triggerSkipAnimation(direction: 'forward' | 'backward') {
+        this.skipAnimation.set(direction);
+        clearTimeout(this.skipTimeout);
+        this.skipTimeout = setTimeout(() => this.skipAnimation.set(null), 600);
+    }
+
+    // Double Click Handlers
+    handleDoubleClick(event: MouseEvent) {
+        const containerWidth = this.containerRef.nativeElement.clientWidth;
+        const clickX = event.offsetX;
+
+        // Left 30% -> Backward
+        if (clickX < containerWidth * 0.3) {
+            this.seekRelative(-10);
+            this.triggerSkipAnimation('backward');
+        }
+        // Right 30% -> Forward
+        else if (clickX > containerWidth * 0.7) {
+            this.seekRelative(10);
+            this.triggerSkipAnimation('forward');
+        }
+        // Center -> Toggle Fullscreen (Optional, but commonly toggle play or fullscreen)
+        else {
+            this.toggleFullscreen();
+        }
+    }
+
     ngOnDestroy() {
         this.stopProgressSync();
         if (this.hls) this.hls.destroy();
+        clearTimeout(this.hideControlsTimeout);
+        clearTimeout(this.skipTimeout);
     }
 }
