@@ -3,10 +3,14 @@
 .vscode/
 *.swp
 *.iml
+*.iws
 
 # OS
 .DS_Store
 Thumbs.db
+.AppleDouble
+.LSOverride
+Icon
 
 # Logs
 *.log
@@ -19,3 +23,11 @@ tmp/
 temp/
 dist/
 node_modules/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
