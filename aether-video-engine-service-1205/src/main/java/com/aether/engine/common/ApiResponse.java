@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     private boolean success;
@@ -23,6 +27,8 @@ public class ApiResponse<T> {
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Meta {
         private int page;
         private int pageSize;
@@ -31,6 +37,8 @@ public class ApiResponse<T> {
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ErrorDetail {
         private String field;
         private String reason;
@@ -38,26 +46,34 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> success(T data, String message) {
-        return ApiResponse.<T>builder()
-                .success(true)
-                .code("APP-0000")
-                .message(message)
-                .traceId(UUID.randomUUID().toString())
-                .txnId("TXN-" + System.currentTimeMillis())
-                .timestamp(LocalDateTime.now())
-                .data(data)
-                .build();
+        ApiResponse<T> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setCode("APP-0000");
+        response.setMessage(message);
+        response.setTraceId(UUID.randomUUID().toString());
+        response.setTxnId("TXN-" + System.currentTimeMillis());
+        response.setTimestamp(LocalDateTime.now());
+        response.setData(data);
+        return response;
     }
 
     public static <T> ApiResponse<T> error(String code, String message, List<ErrorDetail> errors) {
-        return ApiResponse.<T>builder()
-                .success(false)
-                .code(code)
-                .message(message)
-                .traceId(UUID.randomUUID().toString())
-                .txnId("TXN-" + System.currentTimeMillis())
-                .timestamp(LocalDateTime.now())
-                .errors(errors)
-                .build();
+        ApiResponse<T> response = new ApiResponse<>();
+        response.setSuccess(false);
+        response.setCode(code);
+        response.setMessage(message);
+        response.setTraceId(UUID.randomUUID().toString());
+        response.setTxnId("TXN-" + System.currentTimeMillis());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrors(errors);
+        return response;
+    }
+
+    public static <T> ApiResponse<T> error(String code, String message) {
+        return error(code, message, null);
+    }
+
+    public static <T> ApiResponse<T> error(String message) {
+        return error("ERR-9999", message, null);
     }
 }
