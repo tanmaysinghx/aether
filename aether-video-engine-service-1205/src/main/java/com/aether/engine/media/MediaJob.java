@@ -1,4 +1,4 @@
-package com.aether.engine.media.internal.entity;
+package com.aether.engine.media;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,8 @@ public class MediaJob {
     private UUID id;
 
     private String title;
-    private String status; // PENDING, PROCESSING, COMPLETED, FAILED
+    @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
+    private JobStatus status; // PENDING, PROCESSING, COMPLETED, FAILED
     private Double progress; // 0.0 to 100.0
     private String appSource; // TUBE or PLAY
 

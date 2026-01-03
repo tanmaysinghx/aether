@@ -78,7 +78,8 @@ public class FFmpegServiceImpl implements FFmpegService {
             java.nio.file.Files.write(java.nio.file.Path.of(keyPath), key);
 
             // 2. Create Key Info File
-            String keyUri = "http://localhost:" + serverPort + "/api/v1/keys/" + jobId;
+            String keyBaseUrl = System.getProperty("app.hls.key.base-url", "http://localhost:" + serverPort);
+            String keyUri = keyBaseUrl + "/api/v1/keys/" + jobId;
             String keyInfoPath = outputDir + "/enc.keyinfo";
             try (FileWriter writer = new FileWriter(keyInfoPath)) {
                 writer.write(keyUri + "\n");

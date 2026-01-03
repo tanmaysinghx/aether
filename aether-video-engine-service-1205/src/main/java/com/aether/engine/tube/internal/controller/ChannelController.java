@@ -1,6 +1,6 @@
 package com.aether.engine.tube.internal.controller;
 
-import com.aether.engine.common.api.ApiResponse;
+import com.aether.engine.common.ApiResponse;
 import com.aether.engine.tube.internal.dto.ChannelResponse;
 import com.aether.engine.tube.internal.dto.CreateChannelRequest;
 import com.aether.engine.tube.internal.service.ChannelService;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Channels", description = "Endpoints for channel management")
 @RestController
 @RequestMapping("/api/v1/channels")
 @RequiredArgsConstructor
@@ -20,6 +21,8 @@ public class ChannelController {
 
     private final ChannelService channelService;
 
+    @io.swagger.v3.oas.annotations.Operation(summary = "Create a new channel", description = "Allows users to create a unique channel with a name and handle.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Channel created successfully")
     @PostMapping
     public ResponseEntity<ApiResponse<ChannelResponse>> createChannel(
             @Valid @RequestBody CreateChannelRequest request) {

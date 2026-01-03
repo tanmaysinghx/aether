@@ -1,28 +1,29 @@
 package com.aether.engine.media.internal.controller;
 
-import com.aether.engine.common.api.ApiResponse;
+import com.aether.engine.common.ApiResponse;
+import com.aether.engine.media.JobStatus;
+import com.aether.engine.media.MediaJobDto;
+import com.aether.engine.media.MediaService;
+import com.aether.engine.media.MediaJobRepository;
 import com.aether.engine.media.UploadRequest;
-import com.aether.engine.media.internal.dto.MediaJobDto;
 import com.aether.engine.media.internal.dto.MediaUploadDto;
-import com.aether.engine.media.internal.entity.MediaJob;
-import com.aether.engine.media.internal.service.MediaService;
+import com.aether.engine.media.MediaJob;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
-import com.aether.engine.media.internal.repository.MediaJobRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import java.util.UUID;
 
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Media", description = "Endpoints for video upload, view count, and job status")
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/media")
@@ -46,7 +47,7 @@ public class MediaController {
                 metadata = objectMapper.readValue(uploadDto.getMetadata(), Map.class);
             } catch (JsonProcessingException e) {
                 log.error("Invalid metadata JSON", e);
-                throw new RuntimeException("Invalid metadata JSON format"); // Ideally map to custom exception handler
+                throw new RuntimeException("Invalid metadata JSON format");
             }
         }
 
@@ -56,7 +57,6 @@ public class MediaController {
         MediaJob job = mediaService.processUpload(uploadDto.getFile(), request);
 
         return ApiResponse.success(mapToDto(job), "Video upload started successfully");
-
     }
 
     @PostMapping("/{id}/view")

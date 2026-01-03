@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@io.swagger.v3.oas.annotations.tags.Tag(name = "DRM Keys", description = "Endpoints for retrieving HLS encryption keys")
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/keys")
@@ -23,6 +24,9 @@ public class KeyController {
     @Value("${app.storage.location:video_storage}")
     private String storageLocation;
 
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get HLS encryption key", description = "Retrieves the AES-128 encryption key for a specific transcoding job.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Key retrieved successfully")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Key not found")
     @GetMapping(value = "/{jobId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> getKey(@PathVariable UUID jobId) {
         log.info("Requesting encryption key for Job ID: {}", jobId);

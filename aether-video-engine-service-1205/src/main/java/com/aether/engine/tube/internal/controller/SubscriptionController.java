@@ -1,6 +1,6 @@
 package com.aether.engine.tube.internal.controller;
 
-import com.aether.engine.common.api.ApiResponse;
+import com.aether.engine.common.ApiResponse;
 import com.aether.engine.tube.internal.dto.SubscriptionRequest;
 import com.aether.engine.tube.internal.service.SubscriptionService;
 import jakarta.validation.Valid;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Subscriptions", description = "Endpoints for managing user subscriptions to channels")
 @RestController
 @RequestMapping("/api/v1/subscriptions")
 @RequiredArgsConstructor

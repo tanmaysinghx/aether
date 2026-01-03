@@ -1,4 +1,4 @@
-package com.aether.engine.media.internal.dto;
+package com.aether.engine.media;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -11,7 +11,7 @@ import lombok.Data;
 public class MediaJobDto {
     private UUID id;
     private String title;
-    private String status;
+    private JobStatus status;
     private Double progress;
     private String appSource;
     private String videoType;

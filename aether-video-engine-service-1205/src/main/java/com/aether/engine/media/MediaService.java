@@ -1,10 +1,11 @@
-package com.aether.engine.media.internal.service;
+package com.aether.engine.media;
 
-import com.aether.engine.media.UploadRequest;
-import com.aether.engine.media.internal.entity.MediaJob;
-import com.aether.engine.media.internal.repository.MediaJobRepository;
+import com.aether.engine.media.internal.event.MediaProgressUpdateEvent;
+import com.aether.engine.media.internal.service.FFmpegService;
+import com.aether.engine.media.internal.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,19 @@ public class MediaService {
     private final MediaJobRepository mediaJobRepository;
     private final FFmpegService ffmpegService;
     private final StorageService storageService;
+    private final ApplicationEventPublisher eventPublisher;
+
+    @jakarta.annotation.PostConstruct
+    public void resumeInterruptedJobs() {
+        log.info("Checking for interrupted media jobs...");
+        java.util.List<MediaJob> processingJobs = mediaJobRepository.findByStatus(JobStatus.PROCESSING);
+        for (MediaJob job : processingJobs) {
+            log.warn("Found interrupted job {}. Marking as FAILED.", job.getId());
+            job.setStatus(JobStatus.FAILED);
+            mediaJobRepository.save(job);
+            eventPublisher.publishEvent(new MediaProgressUpdateEvent(job.getId(), job.getProgress(), "FAILED"));
+        }
+    }
 
     public MediaJob processUpload(MultipartFile file, UploadRequest request) {
         // 1. Save Job as PENDING/PROCESSING
@@ -28,10 +42,14 @@ public class MediaService {
         job.setDescription(request.description());
         job.setLanguage(request.language());
         job.setMetadata(request.metadata());
-        job.setStatus("PROCESSING");
+        job.setStatus(JobStatus.PROCESSING);
+        job.setProgress(0.0);
 
         MediaJob savedJob = mediaJobRepository.save(job);
         log.info("MediaJob created with ID: {}", savedJob.getId());
+
+        // Publish initial event
+        eventPublisher.publishEvent(new MediaProgressUpdateEvent(savedJob.getId(), 0.0, "PROCESSING"));
 
         // 2. Start Async Transcoding
         Thread.ofVirtual().start(() -> {
@@ -56,48 +74,34 @@ public class MediaService {
                 if (thumbnailUrl != null) {
                     savedJob.setThumbnailUrl(thumbnailUrl);
                     mediaJobRepository.save(savedJob);
+                    eventPublisher.publishEvent(
+                            new MediaProgressUpdateEvent(savedJob.getId(), savedJob.getProgress(), "PROCESSING"));
                 }
 
                 // Perform Transcoding with Progress Tracking
                 Double duration = ffmpegService.transcode(savedJob.getId(), inputPath.toString(), (percentage) -> {
-                    // Update only if percentage changed significantly or periodically?
-                    // For now, let's just log and update. Hibernate might be chatty.
-                    // A better approach is to throttle here.
-
-                    // Note: This runs on the virtual thread of the task.
-                    // We need a new transaction or just save carefully.
-                    // To avoid overwhelming DB, let's update every 5%
-
-                    /*
-                     * Optimistic throttling:
-                     * IF (newPercentage - lastPercentage >= 5 || newPercentage >= 100)
-                     * Update DB
-                     * 
-                     * But `savedJob` isn't thread-safe if shared, but here we are in a single
-                     * lambda context.
-                     * We re-fetch or just update the in-memory object and save.
-                     */
-
                     if (shouldUpdate(savedJob.getProgress(), percentage)) {
                         log.info("Job {} Progress: {}%", savedJob.getId(), String.format("%.2f", percentage));
                         savedJob.setProgress(percentage);
                         mediaJobRepository.save(savedJob);
+                        eventPublisher
+                                .publishEvent(new MediaProgressUpdateEvent(savedJob.getId(), percentage, "PROCESSING"));
                     }
                 });
 
                 // Update Status COMPLETED
-                savedJob.setStatus("COMPLETED");
+                savedJob.setStatus(JobStatus.COMPLETED);
                 savedJob.setProgress(100.0);
                 savedJob.setDurationSeconds(duration);
                 mediaJobRepository.save(savedJob);
-
-                // Cleanup raw file? Maybe keep it for re-transcoding?
-                // keeping for now.
+                eventPublisher.publishEvent(new MediaProgressUpdateEvent(savedJob.getId(), 100.0, "COMPLETED"));
 
             } catch (Exception e) {
                 log.error("Transcoding failed for job " + savedJob.getId(), e);
-                savedJob.setStatus("FAILED");
+                savedJob.setStatus(JobStatus.FAILED);
                 mediaJobRepository.save(savedJob);
+                eventPublisher
+                        .publishEvent(new MediaProgressUpdateEvent(savedJob.getId(), savedJob.getProgress(), "FAILED"));
             }
         });
 
@@ -105,7 +109,7 @@ public class MediaService {
     }
 
     public java.util.List<MediaJob> getFeed(String appSource) {
-        return mediaJobRepository.findByAppSourceAndStatusOrderByCreatedAtDesc(appSource, "COMPLETED");
+        return mediaJobRepository.findByAppSourceAndStatusOrderByCreatedAtDesc(appSource, JobStatus.COMPLETED);
     }
 
     @org.springframework.transaction.annotation.Transactional

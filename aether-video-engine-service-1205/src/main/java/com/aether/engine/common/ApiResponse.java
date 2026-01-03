@@ -1,4 +1,4 @@
-package com.aether.engine.common.api;
+package com.aether.engine.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
